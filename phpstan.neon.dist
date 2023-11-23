@@ -1,0 +1,25 @@
+includes:
+    - tools/phpstan/vendor/ekino/phpstan-banned-code/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-deprecation-rules/rules.neon
+    - tools/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
+    - tools/phpstan/vendor/phpstan/phpstan-strict-rules/rules.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+        - tests
+    tmpDir: var/phpstan
+    ignoreErrors:
+        # 3 errors due to circular reference in ExceptionNormalizer
+        - message: '#Circular definition detected in type alias NormalizedException\.#'
+          path: src/ExceptionNormalizer.php
+        - message: '#Method Beesofts\\PrettyDumper\\ExceptionNormalizer\:\:normalizeException\(\) return type has no value type specified in iterable type array\.#'
+          path: src/ExceptionNormalizer.php
+        - message: '#PHPDoc tag @return contains unresolvable type\.#'
+          path: src/ExceptionNormalizer.php
+        - message: '#Argument of an invalid type array\|object supplied for foreach, only iterables are supported\.#'
+          path: src/PrettyDumper.php
+        # no need to define return type precisely for tests data providers
+        - '#^Method .+CasesProvider\(\) return type has no value type specified in iterable type iterable\.$#'
